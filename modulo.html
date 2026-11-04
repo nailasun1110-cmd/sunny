@@ -1,1 +1,157 @@
-Kalkulator Modulo
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalkulator Modulo Naila 262505010</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+body{min-height:100vh;background:linear-gradient(160deg,#FFE0EE,#F4E6FF 50%,#DCEBFF) fixed;color:#1F2A5C}
+.card{border:0;border-radius:1.25rem;box-shadow:0 .5rem 1.5rem rgba(91,141,255,.2)}
+.form-control:focus,.form-select:focus{border-color:#FF6FB1;box-shadow:0 0 0 .2rem rgba(255,111,177,.25)}
+.btn-pb{background:linear-gradient(135deg,#DB2F87,#2F63F0);border:0;color:#fff;font-weight:600}
+.btn-pb:hover,.btn-pb:disabled{color:#fff}
+.btn-pb:disabled{opacity:.5}
+#hasil{color:#2F63F0;word-break:break-all;line-height:1.1}
+.modal-header{background:linear-gradient(135deg,#FFE0EE,#DCEBFF)}
+.star{position:fixed;pointer-events:none;z-index:3000;line-height:1;animation:pop .9s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes pop{
+  0%{transform:translate(-50%,-50%) scale(.3) rotate(0deg);opacity:1}
+  100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1) rotate(var(--r));opacity:0}
+}
+</style>
+</head>
+<body>
+<div class="container py-4" style="max-width:30rem">
+  <div class="card p-3 p-sm-4">
+    <h1 class="h4 fw-bold mb-1">Kalkulator modulo</h1>
+    <p class="text-secondary small mb-3">Hitung sisa pembagian dengan aritmetika modulo.</p>
+
+    <label class="form-label fw-semibold" for="a">Bilangan (a)</label>
+    <div class="input-group mb-3">
+      <input id="a" class="form-control" inputmode="numeric" autocomplete="off" value="17" placeholder="Contoh: 17">
+      <select id="sa" class="form-select flex-grow-0 w-auto" aria-label="Jenis bilangan">
+        <option value="+">Positif</option>
+        <option value="-">Negatif</option>
+      </select>
+    </div>
+
+    <label class="form-label fw-semibold" for="n">Modulus (n)</label>
+    <div class="input-group mb-3">
+      <input id="n" class="form-control" inputmode="numeric" autocomplete="off" value="5" placeholder="Contoh: 5">
+      <select id="sn" class="form-select flex-grow-0 w-auto" aria-label="Jenis modulus">
+        <option value="+">Positif</option>
+        <option value="-">Negatif</option>
+      </select>
+    </div>
+
+    <div class="border-top pt-3 text-center" aria-live="polite">
+      <div class="text-secondary small">Hasil a mod n</div>
+      <div id="hasil" class="display-1 fw-bold">–</div>
+      <div id="err" class="text-danger small"></div>
+    </div>
+  </div>
+
+  <button id="cek" class="btn btn-pb btn-lg w-100 mt-3" data-bs-toggle="modal" data-bs-target="#modalCek">
+    Cek kongruensi
+  </button>
+</div>
+
+<!-- Pop up pengecekan kongruensi -->
+<div class="modal fade" id="modalCek" tabindex="-1" aria-labelledby="judulCek" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0" style="border-radius:1.25rem;overflow:hidden">
+      <div class="modal-header border-0">
+        <h2 class="modal-title h5 fw-bold" id="judulCek">Pengecekan kongruensi</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+      </div>
+      <div class="modal-body" id="isi"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var mod = function(x, m){ return ((x % m) + m) % m; };
+  var par = function(x){ return x < 0n ? "(" + x + ")" : "" + x; };
+  var data = null;
+
+  function read(inp, sel){
+    var t = $(inp).value.trim();
+    if (!/^\d+$/.test(t)) return null;
+    var v = BigInt(t);
+    return $(sel).value === "-" ? -v : v;
+  }
+
+  function calc(){
+    var a = read("a", "sa"), n = read("n", "sn");
+    data = null; $("err").textContent = "";
+    if (a === null || n === null){
+      $("hasil").textContent = "–";
+      $("err").textContent = "Isi dengan digit 0–9 saja.";
+      $("cek").disabled = true; return;
+    }
+    if (n === 0n){
+      $("hasil").textContent = "–";
+      $("err").textContent = "Modulus tidak boleh 0.";
+      $("cek").disabled = true; return;
+    }
+    var m = n < 0n ? -n : n;
+    data = {a: a, n: n, m: m, r: mod(a, m)};
+    $("hasil").textContent = data.r.toString();
+    $("cek").disabled = false;
+  }
+
+  $("modalCek").addEventListener("show.bs.modal", function(){
+    if (!data) return;
+    var a = data.a, n = data.n, m = data.m, r = data.r;
+    var d = a - r, q = d / n;
+    var ok = d % n === 0n && r >= 0n && r < m;
+    $("isi").innerHTML =
+      '<p class="fs-4 fw-bold mb-2" style="color:#2F63F0">' + a + ' ≡ ' + r + ' (mod ' + n + ')</p>' +
+      '<p class="mb-2">a ≡ r (mod n) berlaku jika n habis membagi (a − r).</p>' +
+      '<ol class="mb-3">' +
+        '<li>a − r = ' + par(a) + ' − ' + r + ' = <b>' + d + '</b></li>' +
+        '<li>' + d + ' ÷ ' + par(n) + ' = <b>' + q + '</b> (bilangan bulat, sisa 0)</li>' +
+        '<li>Syarat sisa: 0 ≤ ' + r + ' &lt; ' + m + '</li>' +
+      '</ol>' +
+      (n < 0n ? '<p class="small text-secondary">Modulus negatif sama dengan modulus |n| = ' + m + '.</p>' : '') +
+      '<div class="alert ' + (ok ? 'alert-success' : 'alert-danger') + ' mb-0">' +
+        (ok ? '✓ Terbukti kongruen: ' + a + ' ≡ ' + r + ' (mod ' + n + ')' : '✗ Tidak kongruen') +
+      '</div>';
+  });
+
+  ["a", "sa", "n", "sn"].forEach(function(id){
+    $(id).addEventListener("input", calc);
+    $(id).addEventListener("change", calc);
+  });
+  calc();
+
+  // Bintang muncul saat diklik
+  var COLORS = ["#FF6FB1", "#5B8DFF", "#FFB3D6", "#9CC0FF"];
+  var CHARS = ["\u2605", "\u2726", "\u2606"];
+  var still = window.matchMedia("(prefers-reduced-motion: reduce)");
+  document.addEventListener("pointerdown", function(e){
+    if (still.matches) return;
+    for (var i = 0; i < 10; i++){
+      var s = document.createElement("span");
+      var ang = Math.random() * 2 * Math.PI, dist = 40 + Math.random() * 70;
+      s.className = "star";
+      s.textContent = CHARS[i % CHARS.length];
+      s.style.left = e.clientX + "px";
+      s.style.top = e.clientY + "px";
+      s.style.fontSize = (12 + Math.random() * 16) + "px";
+      s.style.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+      s.style.setProperty("--dx", (Math.cos(ang) * dist).toFixed(0) + "px");
+      s.style.setProperty("--dy", (Math.sin(ang) * dist).toFixed(0) + "px");
+      s.style.setProperty("--r", (Math.random() * 240 - 120).toFixed(0) + "deg");
+      s.addEventListener("animationend", function(){ this.remove(); });
+      document.body.appendChild(s);
+    }
+  });
+})();
+</script>
+</body>
+</html>
