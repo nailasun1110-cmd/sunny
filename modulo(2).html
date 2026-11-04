@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naila Fauziah 262505010</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --pink-main: #ff85a2;
+            --pink-light: #fbb1bd;
+            --blue-main: #4ea8de;
+            --blue-light: #90e0ef;
+            --bg-gradient: linear-gradient(135deg, #a2d2ff 0%, #ffc8dd 100%);
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        .header-title {
+            color: #4a4e69;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+        }
+
+        .card-header-pink {
+            background: linear-gradient(45deg, #ff85a2, #ffb3c1);
+            color: white;
+            border-radius: 18px 18px 0 0 !important;
+            font-weight: bold;
+        }
+
+        .card-header-blue {
+            background: linear-gradient(45deg, #4ea8de, #80e9ff);
+            color: white;
+            border-radius: 18px 18px 0 0 !important;
+            font-weight: bold;
+        }
+
+        .btn-pink {
+            background: linear-gradient(45deg, #ff758f, #ff85a2);
+            color: white;
+            border: none;
+            font-weight: bold;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-pink:hover {
+            background: linear-gradient(45deg, #ff4d6d, #ff758f);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 117, 143, 0.4);
+        }
+
+        .btn-blue {
+            background: linear-gradient(45deg, #48cae4, #0077b6);
+            color: white;
+            border: none;
+            font-weight: bold;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-blue:hover {
+            background: linear-gradient(45deg, #0096c7, #03045e);
+            color: white;
+            box-shadow: 0 5px 15px rgba(72, 202, 228, 0.4);
+        }
+
+        .result-display {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff4d6d, #0077b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .status-badge {
+            font-size: 1.2rem;
+            padding: 8px 18px;
+            border-radius: 30px;
+        }
+
+        /* Styling Efek Bintang (Star Burst Particle) */
+        .star-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            color: #ffb703;
+            animation: burst 1s ease-out forwards;
+        }
+
+        @keyframes burst {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(0.5) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(1.5) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body class="py-5">
+
+    <div class="container">
+        <!-- Header Utama -->
+        <div class="text-center mb-5">
+            <h1 class="header-title display-4"><i class="fa-solid fa-calculator text-danger me-2"></i>Kalkulator Modulo</h1>
+            <p class="lead text-secondary fw-semibold">Aritmatika Modulo & Pengecekan Kongruensi</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- BAGAN 1: KALKULATOR MODULO -->
+            <div class="col-lg-6">
+                <div class="card glass-card h-100 border-0">
+                    <div class="card-header card-header-pink py-3">
+                        <h4 class="mb-0 fs-5"><i class="fa-solid fa-percent me-2"></i>1. Kalkulator Modulo ($a \bmod b$)</h4>
+                    </div>
+                    <div class="card-body p-4 d-flex flex-column justify-content-between">
+                        <div>
+                            <!-- Input Angka a & Jenis Bilangan -->
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Bilangan ($a$):</label>
+                                <div class="input-group">
+                                    <input type="text" id="calc-a" class="form-control form-control-lg" placeholder="Masukkan nilai a (mis: 25)" value="25">
+                                    <select id="type-a" class="form-select bg-light fw-semibold" style="max-width: 140px;">
+                                        <option value="decimal">Desimal</option>
+                                        <option value="binary">Biner (2)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Input Modulus b & Jenis Bilangan -->
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Modulus ($b$):</label>
+                                <div class="input-group">
+                                    <input type="text" id="calc-b" class="form-control form-control-lg" placeholder="Masukkan nilai b (mis: 7)" value="7">
+                                    <select id="type-b" class="form-select bg-light fw-semibold" style="max-width: 140px;">
+                                        <option value="decimal">Desimal</option>
+                                        <option value="binary">Biner (2)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Tombol Hitung -->
+                            <button onclick="calculateModulo(event)" class="btn btn-pink w-100 py-3 mt-2 fs-5">
+                                <i class="fa-solid fa-wand-magic-sparkles me-2"></i>Hitung Modulo
+                            </button>
+                        </div>
+
+                        <!-- Display Hasil Utama -->
+                        <div class="text-center my-4 p-3 bg-white rounded-4 shadow-sm border">
+                            <span class="text-muted fw-bold d-block mb-1">Hasil Modulo ($r$):</span>
+                            <div id="calc-result" class="result-display">4</div>
+                            <div id="calc-equation" class="text-secondary fw-semibold mt-2">25 mod 7 = 4</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BAGAN 2: PENGECEKAN KONGRUENT -->
+            <div class="col-lg-6">
+                <div class="card glass-card h-100 border-0">
+                    <div class="card-header card-header-blue py-3">
+                        <h4 class="mb-0 fs-5"><i class="fa-solid fa-equals me-2"></i>2. Pengecekan Kongruensi ($a \equiv b \pmod m$)</h4>
+                    </div>
+                    <div class="card-body p-4 d-flex flex-column justify-content-between">
+                        <div>
+                            <!-- Input a -->
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Bilangan $a$:</label>
+                                <div class="input-group">
+                                    <input type="text" id="cong-a" class="form-control form-control-lg" placeholder="Nilai a" value="38">
+                                    <select id="cong-type-a" class="form-select bg-light fw-semibold" style="max-width: 140px;">
+                                        <option value="decimal">Desimal</option>
+                                        <option value="binary">Biner (2)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Input b -->
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Bilangan $b$:</label>
+                                <div class="input-group">
+                                    <input type="text" id="cong-b" class="form-control form-control-lg" placeholder="Nilai b" value="14">
+                                    <select id="cong-type-b" class="form-select bg-light fw-semibold" style="max-width: 140px;">
+                                        <option value="decimal">Desimal</option>
+                                        <option value="binary">Biner (2)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Input Modulus m -->
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Modulus ($m$):</label>
+                                <input type="number" id="cong-m" class="form-control form-control-lg" placeholder="Nilai m" value="12">
+                            </div>
+
+                            <!-- Tombol Cek -->
+                            <button onclick="checkCongruence(event)" class="btn btn-blue w-100 py-3 mt-2 fs-5">
+                                <i class="fa-solid fa-star me-2"></i>Cek Kongruensi
+                            </button>
+                        </div>
+
+                        <!-- Display Hasil Kongruensi -->
+                        <div class="text-center my-4 p-3 bg-white rounded-4 shadow-sm border">
+                            <span class="text-muted fw-bold d-block mb-2">Status Kongruensi:</span>
+                            <div id="cong-badge-container">
+                                <span id="cong-badge" class="badge bg-success status-badge mb-2">
+                                    <i class="fa-solid fa-circle-check me-1"></i> BENAR
+                                </span>
+                            </div>
+                            <div id="cong-result-text" class="fs-4 fw-bold text-dark mt-1">38 ≡ 14 (mod 12)</div>
+                            <small id="cong-explanation" class="text-muted d-block mt-1">Karena (38 - 14) = 24 habis dibagi 12.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Logika & Efek Pop-up Bintang -->
+    <script>
+        // Fungsi Pop-up Animasi Bintang
+        function triggerStarPop(event) {
+            const numStars = 20;
+            const x = event.clientX || window.innerWidth / 2;
+            const y = event.clientY || window.innerHeight / 2;
+
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('i');
+                star.className = 'fa-solid fa-star star-particle';
+                
+                // Randomize arah ledakan bintang
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 50 + Math.random() * 120;
+                const tx = Math.cos(angle) * velocity + 'px';
+                const ty = Math.sin(angle) * velocity + 'px';
+
+                star.style.left = x + 'px';
+                star.style.top = y + 'px';
+                star.style.setProperty('--tx', tx);
+                star.style.setProperty('--ty', ty);
+                star.style.fontSize = (12 + Math.random() * 16) + 'px';
+
+                document.body.appendChild(star);
+
+                setTimeout(() => {
+                    star.remove();
+                }, 1000);
+            }
+        }
+
+        // Parse Input berdasarkan Jenis Bilangan (Desimal / Biner)
+        function parseValue(valStr, type) {
+            valStr = valStr.trim();
+            if (!valStr) return NaN;
+            if (type === 'binary') {
+                if (!/^[01]+$/.test(valStr)) return NaN;
+                return parseInt(valStr, 2);
+            }
+            return parseFloat(valStr);
+        }
+
+        // Logika BAGAN 1: Modulo
+        function calculateModulo(e) {
+            triggerStarPop(e);
+
+            const valA = document.getElementById('calc-a').value;
+            const typeA = document.getElementById('type-a').value;
+            const valB = document.getElementById('calc-b').value;
+            const typeB = document.getElementById('type-b').value;
+
+            const a = parseValue(valA, typeA);
+            const b = parseValue(valB, typeB);
+
+            const resultElem = document.getElementById('calc-result');
+            const eqElem = document.getElementById('calc-equation');
+
+            if (isNaN(a) || isNaN(b)) {
+                resultElem.innerText = 'Error';
+                eqElem.innerText = 'Input bilangan tidak valid!';
+                return;
+            }
+
+            if (b === 0) {
+                resultElem.innerText = 'Undefined';
+                eqElem.innerText = 'Modulus tidak boleh bernilai 0!';
+                return;
+            }
+
+            // Aritmatika Modulo Format Standar Math ((a % b) + b) % b
+            const res = ((a % b) + b) % b;
+
+            resultElem.innerText = res;
+            eqElem.innerText = `${a} mod ${b} = ${res}`;
+        }
+
+        // Logika BAGAN 2: Kongruensi
+        function checkCongruence(e) {
+            triggerStarPop(e);
+
+            const valA = document.getElementById('cong-a').value;
+            const typeA = document.getElementById('cong-type-a').value;
+            const valB = document.getElementById('cong-b').value;
+            const typeB = document.getElementById('cong-type-b').value;
+            const m = parseInt(document.getElementById('cong-m').value);
+
+            const a = parseValue(valA, typeA);
+            const b = parseValue(valB, typeB);
+
+            const badgeElem = document.getElementById('cong-badge');
+            const resultText = document.getElementById('cong-result-text');
+            const expElem = document.getElementById('cong-explanation');
+
+            if (isNaN(a) || isNaN(b) || isNaN(m)) {
+                badgeElem.className = 'badge bg-secondary status-badge mb-2';
+                badgeElem.innerHTML = '<i class="fa-solid fa-triangle-exclamation me-1"></i> ERROR';
+                resultText.innerText = 'Input Tidak Valid';
+                expElem.innerText = 'Pastikan semua angka terisi dengan benar.';
+                return;
+            }
+
+            if (m <= 0) {
+                badgeElem.className = 'badge bg-warning text-dark status-badge mb-2';
+                badgeElem.innerHTML = '<i class="fa-solid fa-triangle-exclamation me-1"></i> WARNING';
+                resultText.innerText = 'Modulus Harus > 0';
+                expElem.innerText = 'Nilai modulus (m) harus lebih besar dari 0.';
+                return;
+            }
+
+            const diff = a - b;
+            const isCongruent = (diff % m === 0);
+
+            if (isCongruent) {
+                badgeElem.className = 'badge bg-success status-badge mb-2';
+                badgeElem.innerHTML = '<i class="fa-solid fa-circle-check me-1"></i> BENAR';
+                resultText.innerText = `${a} ≡ ${b} (mod ${m})`;
+                expElem.innerText = `Sebab (${a} - ${b}) = ${diff}, dan ${diff} habis dibagi ${m}.`;
+            } else {
+                badgeElem.className = 'badge bg-danger status-badge mb-2';
+                badgeElem.innerHTML = '<i class="fa-solid fa-circle-xmark me-1"></i> SALAH';
+                resultText.innerText = `${a} ≢ ${b} (mod ${m})`;
+                expElem.innerText = `Sebab (${a} - ${b}) = ${diff}, dan ${diff} TIDAK habis dibagi ${m}.`;
+            }
+        }
+    </script>
+</body>
+</html>
