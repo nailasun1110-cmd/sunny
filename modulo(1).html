@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Naila fauziah 262505010</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pink:#FF5FA2; --pink-deep:#DB2F87;
+    --blue:#3E6BFF; --blue-deep:#2447D6;
+    --ink:#1F2A5C;
+  }
+  body{
+    font-family:"Nunito",system-ui,sans-serif;
+    color:var(--ink);
+    min-height:100vh;
+    background:linear-gradient(160deg,#FFD6E8 0%,#F1E3FF 50%,#CFE2FF 100%) fixed;
+  }
+  .panel{
+    background:rgba(255,255,255,.93);
+    border:0;
+    border-radius:1.25rem;
+    box-shadow:0 8px 24px rgba(62,107,255,.15);
+  }
+  .form-control,.form-select{border-color:#F3C3DA;font-weight:600}
+  .form-control:focus,.form-select:focus{
+    border-color:var(--blue);
+    box-shadow:0 0 0 .2rem rgba(62,107,255,.25);
+  }
+  .input-group .form-select{flex:0 0 auto;width:7.5rem;background-color:#FFF0F7}
+  .muted{color:#66608A}
+  .result-num{
+    font-size:clamp(3rem,16vw,5rem);
+    font-weight:800;
+    line-height:1.1;
+    color:var(--blue-deep);
+    word-break:break-all;
+  }
+  .result-num.err{font-size:1.05rem;font-weight:600;line-height:1.4;color:var(--pink-deep)}
+  .verdict{
+    display:inline-block;
+    padding:.4rem 1rem;
+    border-radius:2rem;
+    font-weight:800;
+    color:#fff;
+  }
+  .verdict.yes{background:var(--blue)}
+  .verdict.no{background:var(--pink-deep)}
+  .verdict.idle{background:#8E88B3}
+  .steps{padding-left:1.1rem;margin:0}
+  .steps li{margin:.15rem 0}
+  .star{
+    position:fixed;
+    pointer-events:none;
+    z-index:2000;
+    line-height:1;
+    will-change:transform,opacity;
+    animation:pop .9s cubic-bezier(.2,.7,.3,1) forwards;
+  }
+  @keyframes pop{
+    0%{transform:translate(-50%,-50%) scale(.3) rotate(0deg);opacity:1}
+    100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1) rotate(var(--r));opacity:0}
+  }
+</style>
+</head>
+<body>
+<main class="container py-4" style="max-width:34rem">
+
+  <h1 class="h3 fw-bolder mb-1">Kalkulator Modulo</h1>
+  <p class="muted mb-4">Aritmetika modulo: hitung sisa pembagian a oleh modulus b.</p>
+
+  <!-- Kalkulator -->
+  <section class="panel p-4 mb-4" aria-live="polite">
+    <div class="mb-3">
+      <label class="form-label fw-bold" for="a">Bilangan a</label>
+      <div class="input-group">
+        <select id="aSign" class="form-select" aria-label="Jenis bilangan a">
+          <option value="+">Positif</option>
+          <option value="-">Negatif</option>
+        </select>
+        <input id="a" type="text" inputmode="numeric" class="form-control" value="17" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label fw-bold" for="b">Modulus b</label>
+      <div class="input-group">
+        <select id="bSign" class="form-select" aria-label="Jenis bilangan modulus b">
+          <option value="+">Positif</option>
+          <option value="-">Negatif</option>
+        </select>
+        <input id="b" type="text" inputmode="numeric" class="form-control" value="5" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="text-center border-top pt-3">
+      <div class="fw-bold">Hasil</div>
+      <div class="muted small" id="eq">&nbsp;</div>
+      <div class="result-num" id="result">2</div>
+      <div class="muted small" id="detail"></div>
+    </div>
+  </section>
+
+  <!-- Cek kongruensi -->
+  <section class="panel p-4" aria-live="polite">
+    <h2 class="h5 fw-bolder mb-1">Cek kongruensi</h2>
+    <p class="muted small">Apakah a &equiv; b (mod n)? Dua bilangan kongruen jika sisa bagi keduanya oleh n sama.</p>
+
+    <div class="row g-2 mb-3">
+      <div class="col-4">
+        <label class="form-label fw-bold" for="ca">a</label>
+        <input id="ca" type="text" class="form-control" value="17" autocomplete="off">
+      </div>
+      <div class="col-4">
+        <label class="form-label fw-bold" for="cb">b</label>
+        <input id="cb" type="text" class="form-control" value="2" autocomplete="off">
+      </div>
+      <div class="col-4">
+        <label class="form-label fw-bold" for="cn">Modulus n</label>
+        <input id="cn" type="text" class="form-control" value="5" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="text-center">
+      <div class="verdict idle" id="verdict">-</div>
+      <div class="mt-2 fw-bold" id="cEq"></div>
+      <ul class="steps muted small text-start mt-2" id="cSteps"></ul>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(id){ return document.getElementById(id); };
+  function mod(x, m){ return ((x % m) + m) % m; }
+
+  // ---------- Kalkulator modulo ----------
+  // Angka diketik tanpa tanda; tanda dipilih lewat menu Positif/Negatif.
+  function readSigned(id, signId){
+    var t = $(id).value.trim();
+    if (t === "") return {empty:true};
+    if (!/^\d+$/.test(t)) return {bad:true};
+    var v = BigInt(t);
+    return {v: $(signId).value === "-" ? -v : v};
+  }
+
+  function calc(){
+    var out = $("result"), a = readSigned("a", "aSign"), b = readSigned("b", "bSign");
+    out.className = "result-num";
+    $("detail").textContent = "";
+    if (a.empty || b.empty){
+      $("eq").innerHTML = "&nbsp;";
+      out.textContent = "-";
+      $("detail").textContent = "Isi bilangan a dan modulus b.";
+      return;
+    }
+    if (a.bad || b.bad){
+      $("eq").innerHTML = "&nbsp;";
+      out.className = "result-num err";
+      out.textContent = "Ketik angka saja (0-9). Pilih positif atau negatif lewat menu.";
+      return;
+    }
+    if (b.v === 0n){
+      $("eq").innerHTML = "&nbsp;";
+      out.className = "result-num err";
+      out.textContent = "Modulus b tidak boleh 0.";
+      return;
+    }
+    var m = b.v < 0n ? -b.v : b.v;
+    var r = mod(a.v, m);
+    var q = (a.v - r) / m;
+    $("eq").textContent = a.v + " mod " + b.v + " =";
+    out.textContent = r.toString();
+    var d = a.v + " = (" + q + ") \u00D7 " + m + " + " + r;
+    if (b.v < 0n) d += ". Modulus negatif dihitung sebagai |b| = " + m + ".";
+    $("detail").textContent = d;
+  }
+
+  // ---------- Cek kongruensi: a \u2261 b (mod n) ----------
+  function readInt(id){
+    var t = $(id).value.trim();
+    if (t === "") return {empty:true};
+    if (!/^[+-]?\d+$/.test(t)) return {bad:true};
+    return {v: BigInt(t)};
+  }
+  function setVerdict(cls, text){
+    var el = $("verdict");
+    el.className = "verdict " + cls;
+    el.textContent = text;
+  }
+
+  function congruence(){
+    var a = readInt("ca"), b = readInt("cb"), n = readInt("cn");
+    var steps = $("cSteps");
+    steps.innerHTML = "";
+    $("cEq").textContent = "";
+    if (a.empty || b.empty || n.empty){
+      setVerdict("idle", "Isi a, b, dan n");
+      return;
+    }
+    if (a.bad || b.bad || n.bad){
+      setVerdict("idle", "Gunakan bilangan bulat");
+      return;
+    }
+    if (n.v === 0n){
+      setVerdict("idle", "n tidak boleh 0");
+      return;
+    }
+    var m = n.v < 0n ? -n.v : n.v;
+    var ra = mod(a.v, m), rb = mod(b.v, m), diff = a.v - b.v;
+    var ok = ra === rb;
+    setVerdict(ok ? "yes" : "no", ok ? "Kongruen" : "Tidak kongruen");
+    $("cEq").textContent = a.v + (ok ? " \u2261 " : " \u2262 ") + b.v + " (mod " + n.v + ")";
+    [
+      "a mod n = " + a.v + " mod " + m + " = " + ra,
+      "b mod n = " + b.v + " mod " + m + " = " + rb,
+      "a \u2212 b = " + diff + (ok ? ", habis dibagi " : ", tidak habis dibagi ") + m
+    ].forEach(function(t){
+      var li = document.createElement("li");
+      li.textContent = t;
+      steps.appendChild(li);
+    });
+  }
+
+  ["a", "aSign", "b", "bSign"].forEach(function(id){
+    $(id).addEventListener("input", calc);
+    $(id).addEventListener("change", calc);
+  });
+  ["ca", "cb", "cn"].forEach(function(id){ $(id).addEventListener("input", congruence); });
+  calc();
+  congruence();
+
+  // ---------- Bintang muncul saat diklik ----------
+  var COLORS = ["#FF6FB1", "#5B8DFF", "#FFB3D6", "#9CC0FF"];
+  var CHARS = ["\u2605", "\u2726", "\u2606"];
+  var still = window.matchMedia("(prefers-reduced-motion: reduce)");
+  document.addEventListener("pointerdown", function(e){
+    if (still.matches) return;
+    for (var i = 0; i < 10; i++){
+      var s = document.createElement("span");
+      var ang = Math.random() * 2 * Math.PI, dist = 40 + Math.random() * 70;
+      s.className = "star";
+      s.textContent = CHARS[i % CHARS.length];
+      s.style.left = e.clientX + "px";
+      s.style.top = e.clientY + "px";
+      s.style.fontSize = (12 + Math.random() * 16) + "px";
+      s.style.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+      s.style.setProperty("--dx", (Math.cos(ang) * dist).toFixed(0) + "px");
+      s.style.setProperty("--dy", (Math.sin(ang) * dist).toFixed(0) + "px");
+      s.style.setProperty("--r", (Math.random() * 240 - 120).toFixed(0) + "deg");
+      s.addEventListener("animationend", function(){ this.remove(); });
+      document.body.appendChild(s);
+    }
+  });
+})();
+</script>
+</body>
+</html>
