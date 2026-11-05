@@ -3,16 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Naila Fauziah 262505010</title>
+    <title>Naila fauziah 262505010</title>
     <!-- Bootstrap 5 CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         :root {
-            --pink-main: #d3968c;
-            --blue-main: #105666;
-            --bg-gradient: linear-gradient(#d3968c, #a2d2ff 0%, #ffc8dd 100%);
+            /* Palette Warna Baru */
+            --dark-green: #1b4332;
+            --dark-green-light: #2d6a4f;
+            --moss-green: #556b2f;
+            --moss-green-light: #6b8e23;
+            --rosy-brown: #bc8f8f;
+            --midnight-green: #004953;
+            --bg-gradient: linear-gradient(135deg, #004953 0%, #bc8f8f 100%);
         }
 
         body {
@@ -25,41 +30,40 @@
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.5);
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .glass-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
         }
 
         .header-title {
-            color: #4a4e69;
+            color: #ffffff;
             font-weight: 800;
-            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
         }
 
-        .card-header-pink {
-            background: linear-gradient(45deg, #ff85a2, #ffb3c1);
+        .header-subtitle {
+            color: #f0e68c;
+            font-weight: 600;
+        }
+
+        /* Dark Green Card Header & Button */
+        .card-header-dark-green {
+            background: linear-gradient(45deg, #081c15, #1b4332);
             color: white;
             border-radius: 18px 18px 0 0 !important;
             font-weight: bold;
         }
 
-        .card-header-blue {
-            background: linear-gradient(45deg, #4ea8de, #80e9ff);
-            color: white;
-            border-radius: 18px 18px 0 0 !important;
-            font-weight: bold;
-        }
-
-        .btn-pink {
-            background: linear-gradient(45deg, #ff758f, #ff85a2);
+        .btn-dark-green {
+            background: linear-gradient(45deg, #1b4332, #2d6a4f);
             color: white;
             border: none;
             font-weight: bold;
@@ -67,14 +71,22 @@
             transition: all 0.3s ease;
         }
 
-        .btn-pink:hover {
-            background: linear-gradient(45deg, #ff4d6d, #ff758f);
+        .btn-dark-green:hover {
+            background: linear-gradient(45deg, #081c15, #1b4332);
             color: white;
-            box-shadow: 0 5px 15px rgba(255, 117, 143, 0.4);
+            box-shadow: 0 5px 15px rgba(27, 67, 50, 0.5);
         }
 
-        .btn-blue {
-            background: linear-gradient(45deg, #48cae4, #0077b6);
+        /* Moss Green Card Header & Button */
+        .card-header-moss-green {
+            background: linear-gradient(45deg, #3b4e1a, #556b2f);
+            color: white;
+            border-radius: 18px 18px 0 0 !important;
+            font-weight: bold;
+        }
+
+        .btn-moss-green {
+            background: linear-gradient(45deg, #556b2f, #6b8e23);
             color: white;
             border: none;
             font-weight: bold;
@@ -82,16 +94,16 @@
             transition: all 0.3s ease;
         }
 
-        .btn-blue:hover {
-            background: linear-gradient(45deg, #0096c7, #03045e);
+        .btn-moss-green:hover {
+            background: linear-gradient(45deg, #3b4e1a, #556b2f);
             color: white;
-            box-shadow: 0 5px 15px rgba(72, 202, 228, 0.4);
+            box-shadow: 0 5px 15px rgba(85, 107, 47, 0.5);
         }
 
         .result-display {
             font-size: 3.5rem;
             font-weight: 900;
-            background: linear-gradient(45deg, #ff4d6d, #0077b6);
+            background: linear-gradient(45deg, #1b4332, #556b2f);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -107,7 +119,7 @@
             position: fixed;
             pointer-events: none;
             z-index: 9999;
-            color: #ffb703;
+            color: #ffd700;
             animation: burst 1s ease-out forwards;
         }
 
@@ -128,22 +140,22 @@
     <div class="container">
         <!-- Header Utama -->
         <div class="text-center mb-5">
-            <h1 class="header-title display-4"><i class="fa-solid fa-calculator text-danger me-2"></i>Kalkulator Modulo</h1>
-            <p class="lead text-secondary fw-semibold">Aritmatika Modulo & Pengecekan Kongruensi</p>
+            <h1 class="header-title display-4"><i class="fa-solid fa-calculator me-2"></i>Kalkulator Modulo</h1>
+            <p class="lead header-subtitle">Aritmatika Modulo & Pengecekan Kongruensi</p>
         </div>
 
         <div class="row g-4">
-            <!-- BAGAN 1: KALKULATOR MODULO -->
+            <!-- BAGAN 1: KALKULATOR MODULO (Dark Green) -->
             <div class="col-lg-6">
                 <div class="card glass-card h-100 border-0">
-                    <div class="card-header card-header-pink py-3">
-                        <h4 class="mb-0 fs-5"><i class="fa-solid fa-percent me-2"></i>1. Kalkulator Modulo a mod b</h4>
+                    <div class="card-header card-header-dark-green py-3">
+                        <h4 class="mb-0 fs-5"><i class="fa-solid fa-percent me-2"></i>1. Kalkulator Modulo ($a \bmod b$)</h4>
                     </div>
                     <div class="card-body p-4 d-flex flex-column justify-content-between">
                         <div>
                             <!-- Input Angka a & Jenis Bilangan -->
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Bilangan a :</label>
+                                <label class="form-label fw-bold">Bilangan ($a$):</label>
                                 <div class="input-group">
                                     <input type="text" id="calc-a" class="form-control form-control-lg" placeholder="Masukkan nilai a (mis: 25)" value="25">
                                     <select id="type-a" class="form-select bg-light fw-semibold" style="max-width: 140px;">
@@ -155,7 +167,7 @@
 
                             <!-- Input Modulus b & Jenis Bilangan -->
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Modulus b:</label>
+                                <label class="form-label fw-bold">Modulus ($b$):</label>
                                 <div class="input-group">
                                     <input type="text" id="calc-b" class="form-control form-control-lg" placeholder="Masukkan nilai b (mis: 7)" value="7">
                                     <select id="type-b" class="form-select bg-light fw-semibold" style="max-width: 140px;">
@@ -166,14 +178,14 @@
                             </div>
 
                             <!-- Tombol Hitung -->
-                            <button onclick="calculateModulo(event)" class="btn btn-pink w-100 py-3 mt-2 fs-5">
+                            <button onclick="calculateModulo(event)" class="btn btn-dark-green w-100 py-3 mt-2 fs-5">
                                 <i class="fa-solid fa-wand-magic-sparkles me-2"></i>Hitung Modulo
                             </button>
                         </div>
 
                         <!-- Display Hasil Utama -->
                         <div class="text-center my-4 p-3 bg-white rounded-4 shadow-sm border">
-                            <span class="text-muted fw-bold d-block mb-1">Hasil Modulo m:</span>
+                            <span class="text-muted fw-bold d-block mb-1">Hasil Modulo ($r$):</span>
                             <div id="calc-result" class="result-display">4</div>
                             <div id="calc-equation" class="text-secondary fw-semibold mt-2">25 mod 7 = 4</div>
                         </div>
@@ -181,17 +193,17 @@
                 </div>
             </div>
 
-            <!-- BAGAN 2: PENGECEKAN KONGRUENT -->
+            <!-- BAGAN 2: PENGECEKAN KONGRUENT (Moss Green) -->
             <div class="col-lg-6">
                 <div class="card glass-card h-100 border-0">
-                    <div class="card-header card-header-blue py-3">
-                        <h4 class="mb-0 fs-5"><i class="fa-solid fa-equals me-2"></i>2. Pengecekan Kongruensi a=b </h4>
+                    <div class="card-header card-header-moss-green py-3">
+                        <h4 class="mb-0 fs-5"><i class="fa-solid fa-equals me-2"></i>2. Pengecekan Kongruensi ($a \equiv b \pmod m$)</h4>
                     </div>
                     <div class="card-body p-4 d-flex flex-column justify-content-between">
                         <div>
                             <!-- Input a -->
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Bilangan a:</label>
+                                <label class="form-label fw-bold">Bilangan $a$:</label>
                                 <div class="input-group">
                                     <input type="text" id="cong-a" class="form-control form-control-lg" placeholder="Nilai a" value="38">
                                     <select id="cong-type-a" class="form-select bg-light fw-semibold" style="max-width: 140px;">
@@ -203,7 +215,7 @@
 
                             <!-- Input b -->
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Bilangan b:</label>
+                                <label class="form-label fw-bold">Bilangan $b$:</label>
                                 <div class="input-group">
                                     <input type="text" id="cong-b" class="form-control form-control-lg" placeholder="Nilai b" value="14">
                                     <select id="cong-type-b" class="form-select bg-light fw-semibold" style="max-width: 140px;">
@@ -215,12 +227,12 @@
 
                             <!-- Input Modulus m -->
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Modulus m :</label>
+                                <label class="form-label fw-bold">Modulus ($m$):</label>
                                 <input type="number" id="cong-m" class="form-control form-control-lg" placeholder="Nilai m" value="12">
                             </div>
 
                             <!-- Tombol Cek -->
-                            <button onclick="checkCongruence(event)" class="btn btn-blue w-100 py-3 mt-2 fs-5">
+                            <button onclick="checkCongruence(event)" class="btn btn-moss-green w-100 py-3 mt-2 fs-5">
                                 <i class="fa-solid fa-star me-2"></i>Cek Kongruensi
                             </button>
                         </div>
